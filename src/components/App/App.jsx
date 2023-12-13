@@ -1,83 +1,33 @@
-import { useEffect, useState } from 'react';
-import { nanoid } from 'nanoid';
-
-
-import Filter from '../Filter/Filter';
-import { Container, Wrapper, Title} from './App.styled';
-import ContactForm from '../ContactForm/ContactForm';
-import ContactList from '../ContactList/ContactList';
+import ContactList from 'components/ContactList/ContactList';
+import ContactForm from 'components/ContactsForm/ContactsForm';
+import Container from 'components/Container/Container';
+import Filter from 'components/Filter/Filter';
+import Notification from 'components/Notification/Notification';
+import Section from 'components/Section/Section';
+import { useSelector } from 'react-redux';
+import { getContacts } from 'redux/selectors';
 
 const App = () => {
-  const [contacts, setContacts] = useState(JSON.parse(localStorage.getItem('contacts')) || []);
-  const [filter, setFilter] = useState('');
+  const contacts = useSelector(getContacts);
 
-  useEffect(() => {
-    localStorage.setItem('contacts', JSON.stringify(contacts));
-  }, [contacts]);
-
-  const onAddContact = ({ name, number }) => {
-    const isExist = contacts.some((contact) => contact.name.toLowerCase() === name.toLowerCase());
-
-    if (isExist) {
-      alert(`${name} is already in contacts.`);
-      return;
-    }
-
-    setContacts((prevContacts) => [
-      ...prevContacts,
-      {
-        id: nanoid(),
-        name: name,
-        number: number,
-        bgColor: 'green',
-        color: 'green',
-      },
-    ]);
-  };
-
-  const onDeleteContact = (id) => {
-    setContacts((prevContacts) => prevContacts.filter((contact) => contact.id !== id));
-  };
-
-  const onSearchContact = (event) => {
-    setFilter(event.target.value);
-  };  
-
-  const filteredContacts = (contacts, filter) => {
-  return contacts
-    ? contacts.filter((contact) => 
-        contact.name && contact.name.toLowerCase().includes(filter.toLowerCase())
-      )
-    : [];
-};
-
-  
-
-
-return (
-  <Container>
-    <Title>Phonebook</Title>
-    <Wrapper>
-      <ContactForm onAddContact={onAddContact} />
-      {contacts && contacts.length > 0 ? (
-        <>
-          <Filter onSearchContact={onSearchContact} />
-          <ContactList
-            filteredContacts={filteredContacts(contacts, filter)}
-            onDeleteContact={onDeleteContact}
-          />
-        </>
-      ) : (
-        <h2>No contacts yet</h2>
-      )}
-    </Wrapper>
-  </Container>
-);
-
+  return (
+    <Container>
+      <Section title="Phonebook">
+        <ContactForm />
+      </Section>
+      <Section title="Contacts">
+        {contacts.length > 0 ? (
+          <Filter />
+        ) : (
+          <Notification message="No contacts yet" />
+        )}
+        {contacts.length > 0 && <ContactList />}
+      </Section>
+    </Container>
+  );
 };
 
 export default App;
-
 
 
 

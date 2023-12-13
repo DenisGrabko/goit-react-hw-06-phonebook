@@ -1,228 +1,103 @@
 import { useState } from 'react';
-import PropTypes from 'prop-types';
-import { Form, FormInput, FormSubmit, Format } from './ContactForm.styled';
+import { useDispatch, useSelector } from 'react-redux';
+import { getContacts } from 'redux/selectors';
+import { addContact } from 'redux/contacts-slice';
+import css from './ContactsForm.module.css';
 
+const ContactsForm = () => {
+  const [name, setName] = useState('');
+  const [number, setNumber] = useState('');
 
-const ContactForm = ({ onAddContact }) => {
-  
-  const [name, setName] = useState('')
-  const [number, setNumber] = useState('')
+  const contacts = useSelector(getContacts);
+  const dispatch = useDispatch();
 
+  // Обробка відправки форми
+  const handleSubmit = event => {
+    event.preventDefault();
 
+    // Перевірка на дублікат імені, чи імя яке хочемо додати співпадає з тим яке вже є
+    const isExist = contacts.some(
+      contact => contact.name.toLowerCase().trim() === name.toLowerCase().trim()
+    );
 
+    // якщо хоч один елемент співпадє то в isExist буде true
+    if (isExist) {
+      alert(`${name} is already in contacts.`);
+      return;
+    }
 
-  const handleChange = (event) => {
-    let { name, value } = event.target;
+    // Виклик функції з передачею об'єкту контактів. Redux в slice в action отримає цей об'єкт
+    dispatch(addContact({ name, number }));
+    setName('');
+    setNumber('');
+  };
 
-    switch (name) {      
+  //Обробка зміни значення полів форми
+  const handleChange = event => {
+    const { name, value } = event.target;
+
+    switch (name) {
       case 'name':
-        const newName = event.target.value.replace(/[^a-zA-Zа-яА-ЯіІʼ\s-]/g, '');
-        setName(newName);
+        setName(value);
         break;
-
       case 'number':
         setNumber(value);
         break;
-      
+
       default:
         break;
     }
   };
 
-  const handleAddContact = (event) => {
-    event.preventDefault();
-    onAddContact({ name, number });
-    setName('');
-    setNumber('');
-  };
-  
-    return (
-      <Form onSubmit={handleAddContact}>
-        <FormInput
-          id="outlined-basic"
-          label="Name"
-          variant="outlined"
-          size="small"
+  return (
+    <form onSubmit={handleSubmit} className={css.form}>
+      <label className={css.label}>
+        Name
+        <input
+          type="text"
           name="name"
+          className={css.input}
           value={name}
           onChange={handleChange}
-          style={{ marginBottom: '40px' }}
+          pattern="^[a-zA-Zа-яА-Я]+(([' \-][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
           required
         />
-        <FormInput
-          id="formatted-text-mask-input"
-          label="Number"
-          variant="outlined"
-          size="small"
+      </label>
+
+      <label className={css.label}>
+        Number
+        <input
+          type="tel"
           name="number"
+          className={css.input}
           value={number}
           onChange={handleChange}
-          style={{ marginBottom: '10px' }}
+          pattern="\+?\d{1,4}?[ .\-\s]?\(?\d{1,3}?\)?[ .\-\s]?\d{1,4}[ .\-\s]?\d{1,4}[ .\-\s]?\d{1,9}"
           required
         />
-        <Format>Format: (012) 345-67-89</Format>
-        <FormSubmit variant="contained" type="submit">
-          Add contact
-        </FormSubmit>
-      </Form>
-    );
-  }
+      </label>
 
-
-ContactForm.propTypes = {
-  onAddContact: PropTypes.func.isRequired,
+      <button type="submit" className={css.addBtn}>
+        Add contact
+      </button>
+    </form>
+  );
 };
 
-export default ContactForm;
+export default ContactsForm;
 
 
-// import { useState } from 'react';
-// import PropTypes from 'prop-types';
-// import { Form, FormInput, FormSubmit, Format } from './ContactForm.styled';
+ //   switch (name) {      22<<<<<<<<----------------LINE
+  //     case 'name':
+  //       const newName = event.target.number.replace(/[^a-zA-Zа-яА-ЯіІʼ\s-]/g, '');
+  //       setName(newName);
+  //       break;
 
-// const ContactForm = ({ onAddContact }) => {
-//   const [name, setName] = useState('');
-//   const [number, setNumber] = useState('');
-
-//   const handleNameChange = (event) => {
-//     const newName = event.target.value.replace(/[^a-zA-Zа-яА-ЯіІʼ\s-]/g, '');
-//     setName(newName);
-//   };
-
-//   const handleNumberChange = (event) => {
-//     setNumber(event.target.value);
-//   };
-
-//   const handleAddContact = (event) => {
-//     event.preventDefault();
-//     onAddContact({ name, number });
-//     setName('');
-//     setNumber('');
-//   };
-
-//   return (
-//     <Form onSubmit={handleAddContact}>
-//       <FormInput
-//         id="outlined-basic"
-//         label="Name"
-//         variant="outlined"
-//         size="small"
-//         name="name"
-//         value={name}
-//         onChange={handleNameChange}
-//         style={{ marginBottom: '40px' }}
-//         required
-//       />
-//       <FormInput
-//         id="formatted-text-mask-input"
-//         label="Number"
-//         variant="outlined"
-//         size="small"
-//         name="number"
-//         value={number}
-//         onChange={handleNumberChange}
-//         style={{ marginBottom: '10px' }}
-//         required
-//       />
-//       <Format>Format: (012) 345-67-89</Format>
-//       <FormSubmit variant="contained" type="submit">
-//         Add contact
-//       </FormSubmit>
-//     </Form>
-//   );
-// };
-
-// ContactForm.propTypes = {
-//   onAddContact: PropTypes.func.isRequired,
-// };
-
-// export default ContactForm;
-
-
-
-// import { Component, forwardRef } from 'react';
-// import PropTypes from 'prop-types';
-// import { IMaskInput } from 'react-imask';
-// import { Form, FormInput, FormSubmit, Format } from './ContactForm.styled';
-
-// const NumberMask = forwardRef(function TextMaskCustom(props, ref) {
-//   const { onChange, ...other } = props;
-//   return (
-//     <IMaskInput
-//       {...other}
-//       mask="(#00) 000-00-00"
-//       definitions={{
-//         '#': /[0-9]/,
-//       }}
-//       inputRef={ref}
-//       onAccept={value => onChange({ target: { name: props.name, value } })}
-//       overwrite
-//     />
-//   );
-// });
-
-// class ContactForm extends Component {
-//   state = {
-//     name: '',
-//     number: '',
-//   };
-
-//   handleChange = event => {
-//     let { name, value } = event.target;
-
-//     if (name === 'name') {
-//       value = value.replace(/[^a-zA-Zа-яА-ЯіІʼ\s-]/g, '');
-//     }
-
-//     this.setState({ [name]: value });
-//   };
-
-//   handleAddContact = event => {
-//     event.preventDefault();
-
-//     this.props.onAddContact(this.state);
-//     this.setState({ name: '', number: '' });
-//   };
-
-//   render() {
-//     return (
-//       <Form onSubmit={this.handleAddContact}>
-//         <FormInput
-//           id="outlined-basic"
-//           label="Name"
-//           variant="outlined"
-//           size="small"
-//           name="name"
-//           value={this.state.name}
-//           onChange={this.handleChange}
-//           style={{ marginBottom: '40px' }}
-//           required
-//         />
-//         <FormInput
-//           id="formatted-text-mask-input"
-//           label="Number"
-//           variant="outlined"
-//           size="small"
-//           name="number"
-//           value={this.state.number}
-//           onChange={this.handleChange}
-//           style={{ marginBottom: '10px' }}
-//           InputProps={{
-//             inputComponent: NumberMask,
-//           }}
-//           required
-//         />
-//         <Format>Format: (012) 345-67-89</Format>
-//         <FormSubmit variant="contained" type="submit">
-//           Add contact
-//         </FormSubmit>
-//       </Form>
-//     );
-//   }
-// }
-
-// ContactForm.propTypes = {
-//   onAddContact: PropTypes.func.isRequired,
-// };
-
-// export default ContactForm;
+  //     case 'number':
+  //       setNumber(number);
+  //       break; 
+      
+  //     default:
+  //       break;
+  //   }
+  // };
