@@ -8,7 +8,6 @@ export const contactsSlice = createSlice({
   initialState,
   reducers: {
     addContact: {
-      // Об'єкт з 2 властивостями (reducer, prepare)
       reducer(state, { payload }) {
         state.contacts = [...state.contacts, payload];
       },
