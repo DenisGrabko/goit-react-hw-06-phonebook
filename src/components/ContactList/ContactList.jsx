@@ -1,6 +1,6 @@
 import ContactListItem from 'components/ContactListItem/ContactListItem';
-import { useSelector } from 'react-redux/es/hooks/useSelector';
-import { getContacts, getFilter } from 'redux/selectors';
+import { useSelector } from 'react-redux';
+import { getContacts, getFilter } from '../../redux/selectors';
 
 const ContactList = () => {
   const contacts = useSelector(getContacts); //Отримуємо масив, передаючи функцію тепер з глобальним state Redux

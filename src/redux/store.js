@@ -11,8 +11,8 @@ import {
 } from 'redux-persist';
 import storage from 'redux-persist/lib/storage'; // Локальне сховище
 
-import { contactsReducer } from './contacts-slice';
-import { filterReducer } from './filter-slice';
+import { contactsReducer } from './contactsSlice';
+import { filterReducer } from './filterSlice';
 
 // Вказуємо яку частину локального сховища синхронізуємо
 const contactsConfig = {
@@ -37,7 +37,6 @@ export const store = configureStore({
 });
 
 export const persistor = persistStore(store); // Сховище насичене даними з локального стору
-
 
 
 

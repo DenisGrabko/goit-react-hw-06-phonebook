@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { getContacts } from 'redux/selectors';
-import { addContact } from 'redux/contacts-slice';
+import { getContacts } from '../../redux/selectors';
+import { addContact } from '../../redux/contactsSlice';
 
 const ContactsForm = () => {
   const [name, setName] = useState('');
@@ -82,7 +82,6 @@ const ContactsForm = () => {
 };
 
 export default ContactsForm;
-
 
  //   switch (name) {      22<<<<<<<<----------------LINE
   //     case 'name':

@@ -1,11 +1,11 @@
 import ContactList from 'components/ContactList/ContactList';
-import ContactForm from '../../components/ContactForm/ContactForm';
-import Container from 'components/Container/Container';
+import ContactForm from 'components/ContactsForm/ContactsForm';
+import Container from '../../components/Container/Container';
 import Filter from 'components/Filter/Filter';
 import Notification from 'components/Notification/Notification';
 import Section from 'components/Section/Section';
 import { useSelector } from 'react-redux';
-import { getContacts } from 'redux/selectors';
+import { getContacts } from '../../redux/selectors';
 
 const App = () => {
   const contacts = useSelector(getContacts);

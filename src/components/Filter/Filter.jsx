@@ -1,9 +1,9 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { changeFilter } from 'redux/filter-slice';
-import { getFilter } from 'redux/selectors';
+import { changeFilter } from '../../redux/filterSlice';
+import { getFilter } from '../../redux/selectors';
 
 // Компонент фільтрації контактів
-const Filter = () => {
+export const Filter = () => {
   const dispatch = useDispatch();
   const filter = useSelector(getFilter);  
 
