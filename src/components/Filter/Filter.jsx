@@ -1,7 +1,6 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { changeFilter } from 'redux/filter-slice';
 import { getFilter } from 'redux/selectors';
-import css from './Filter.module.css';
 
 // Компонент фільтрації контактів
 const Filter = () => {
@@ -14,7 +13,7 @@ const Filter = () => {
   };
   return (
     <>
-      <label className={css.filterLabel}>
+      <label>
         Find contacts by name
         <input
           type="text"
