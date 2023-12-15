@@ -1,4 +1,5 @@
 import { configureStore } from '@reduxjs/toolkit';
+import storage from 'redux-persist/lib/storage';
 import {
   persistStore,
   persistReducer,
@@ -9,25 +10,22 @@ import {
   PURGE,
   REGISTER,
 } from 'redux-persist';
-import storage from 'redux-persist/lib/storage'; // Локальне сховище
-
 import { contactsReducer } from './contactsSlice';
 import { filterReducer } from './filterSlice';
 
-// Вказуємо яку частину локального сховища синхронізуємо
+
 const contactsConfig = {
   key: 'contacts',
-  storage, // передається локальне сховище, яке імпортували
-  whitelist: ['contacts'], // синхронізується тільки те поле, яке вказуємо
-  // blacklist: ['isLoading', 'error'],
+  storage, 
+  whitelist: ['contacts'],
 };
 
 export const store = configureStore({
   reducer: {
     contacts: persistReducer(contactsConfig, contactsReducer), // Редюсер для управління станом контактів
-    filter: filterReducer, // .. фільтру
+    filter: filterReducer,
   },
-  // Реагує на події (завантаження, оновлення стору) і або тягне дані з localStorage або навпаки
+
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware({
       serializableCheck: {
@@ -36,8 +34,7 @@ export const store = configureStore({
     }),
 });
 
-export const persistor = persistStore(store); // Сховище насичене даними з локального стору
-
+export const persistor = persistStore(store); 
 
 
 
