@@ -10,28 +10,23 @@ const ContactsForm = () => {
   const contacts = useSelector(getContacts);
   const dispatch = useDispatch();
 
-  // Обробка відправки форми
   const handleSubmit = event => {
     event.preventDefault();
 
-    // Перевірка на дублікат імені, чи імя яке хочемо додати співпадає з тим яке вже є
     const isExist = contacts.some(
       contact => contact.name.toLowerCase().trim() === name.toLowerCase().trim()
     );
 
-    // якщо хоч один елемент співпадє то в isExist буде true
     if (isExist) {
       alert(`${name} is already in contacts.`);
       return;
     }
 
-    // Виклик функції з передачею об'єкту контактів. Redux в slice в action отримає цей об'єкт
     dispatch(addContact({ name, number }));
     setName('');
     setNumber('');
   };
 
-  //Обробка зміни значення полів форми
   const handleChange = event => {
     const { name, value } = event.target;
 
